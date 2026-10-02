@@ -27,7 +27,7 @@ img{max-width:100%}
   --ex:#D9622A; --water:#2E8FCB;
   --warn:#8A5A00; --warn-bg:#FFF1C7; --bad:#C0352B; --bad-bg:#FFE3DF;
   --mp:#2F7FC8; --mc:#C88A0F; --mf:#9A55C8;
-  --pink:#FF8FB1; --sun:#FFC83D; --sky:#6CC3FF; --mint:#5FD69A; --cheek:#FF9DB5;
+  --pink:#FF8FB1; --sun:#FFC83D; --sky:#6CC3FF; --mint:#5FD69A; --peach:#FFA477; --lilac:#B79DF2; --cheek:#FF9DB5;
   --shadow:0 2px 0 rgb(43 36 64/.05),0 10px 30px rgb(80 60 140/.08);
   color-scheme:light;
 }
@@ -202,6 +202,39 @@ h2{font-size:1.12rem;font-weight:600}
 .confetti{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
 .confetti span{position:absolute;top:-16px;width:10px;height:14px;border-radius:3px;animation:fall 1.4s cubic-bezier(.2,.6,.4,1) forwards}
 @keyframes fall{to{transform:translate(var(--dx),105vh) rotate(var(--rot))}}
+
+/* colorful layer */
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+  radial-gradient(260px 220px at 8% 6%,color-mix(in srgb,var(--pink) 22%,transparent),transparent 70%),
+  radial-gradient(300px 260px at 96% 22%,color-mix(in srgb,var(--sky) 22%,transparent),transparent 70%),
+  radial-gradient(320px 260px at 10% 70%,color-mix(in srgb,var(--sun) 20%,transparent),transparent 70%),
+  radial-gradient(300px 240px at 92% 92%,color-mix(in srgb,var(--mint) 20%,transparent),transparent 70%)}
+.ill{display:inline-grid;place-items:center;border-radius:14px;flex-shrink:0}
+.ill.round{border-radius:50%}
+.item.has-ill{grid-template-columns:auto 1fr auto;gap:12px}
+.hero-card{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 16%,var(--surface)),color-mix(in srgb,var(--sun) 18%,var(--surface)))}
+.deco{position:absolute;right:10px;top:8px;width:120px;height:60px;pointer-events:none;z-index:0}
+.meal-card{border-radius:24px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;border:1px solid color-mix(in srgb,var(--tint) 45%,var(--line));background:color-mix(in srgb,var(--tint) 14%,var(--surface));box-shadow:var(--shadow)}
+.meal-card .item:hover{background:color-mix(in srgb,var(--tint) 18%,var(--surface))}
+.meal-card .item .kcal{background:var(--surface)}
+.meal-card .addlink{background:var(--surface);color:var(--fg);border:1.5px solid color-mix(in srgb,var(--tint) 70%,var(--line))}
+.meal-card .meal-ic{background:var(--tint)!important;color:#2B2440}
+.tint{background:color-mix(in srgb,var(--tint) 14%,var(--surface));border-color:color-mix(in srgb,var(--tint) 45%,var(--line))}
+.empty-ill{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.9rem;padding:4px 0}
+.chip .ill{margin:-6px 6px -6px -8px;vertical-align:middle}
+.chip{display:inline-flex;align-items:center}
+.parade{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.parade .ill{animation:bob 3s ease-in-out infinite}
+.parade .ill:nth-child(2){animation-delay:.3s}.parade .ill:nth-child(3){animation-delay:.6s}.parade .ill:nth-child(4){animation-delay:.9s}.parade .ill:nth-child(5){animation-delay:1.2s}
+.act{background:color-mix(in srgb,var(--tint) 16%,var(--surface));border-color:color-mix(in srgb,var(--tint) 40%,var(--line))}
+.act svg{color:var(--fg)}
+.nw{white-space:nowrap}
+.tab[aria-current="page"]{background:color-mix(in srgb,var(--accent) 16%,var(--surface))}
+.stat:nth-child(1){background:color-mix(in srgb,var(--pink) 20%,var(--surface))}
+.stat:nth-child(2){background:color-mix(in srgb,var(--peach) 22%,var(--surface))}
+.stat:nth-child(3){background:color-mix(in srgb,var(--mint) 22%,var(--surface))}
+.bar-top span:first-child::before{content:"";display:inline-block;width:10px;height:10px;border-radius:5px;background:var(--dot,transparent);margin-right:6px;vertical-align:0}
+@media (prefers-reduced-motion: reduce){.parade .ill{animation:none}}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -271,6 +304,28 @@ var S={profile:Object.assign({},DEF_PROFILE),settings:Object.assign({},DEF_SETTI
   meal:defaultMeal(),filter:"freq",query:"",ex:{act:"walk",min:30,lvl:1},weigh:{},sheet:null,sync:"saving",health:{},loginErr:"",loginUser:"",loggingIn:false};
 var FOODS=[],BYID={},COMBOS=[],CATS={},foodsReady=false;
 var hostTheme=document.documentElement.getAttribute("data-theme");
+
+// ---------- illustrations (flat, colorful; outlines stay dark on bright fills in both themes) ----------
+var O='#2B2440';
+var ILL={
+ rice:'<path d="M10 26C10 11 38 11 38 26Z" fill="#FFFFFF" stroke="'+O+'" stroke-width="2" stroke-linejoin="round"/><ellipse cx="19" cy="19" rx="1.6" ry="1" fill="#E3DDF0"/><ellipse cx="28" cy="17" rx="1.6" ry="1" fill="#E3DDF0"/><ellipse cx="24" cy="22" rx="1.6" ry="1" fill="#E3DDF0"/><path d="M6 26h36a18 15 0 0 1-36 0z" fill="#4FB286" stroke="'+O+'" stroke-width="2" stroke-linejoin="round"/><path d="M12 33h24" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 5"/>',
+ meat:'<path d="M29 29l8 8" stroke="'+O+'" stroke-width="7" stroke-linecap="round"/><path d="M29 29l8 8" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/><circle cx="39.5" cy="35.5" r="3.2" fill="#FFFFFF" stroke="'+O+'" stroke-width="2"/><circle cx="35.5" cy="39.5" r="3.2" fill="#FFFFFF" stroke="'+O+'" stroke-width="2"/><ellipse cx="20" cy="20" rx="13" ry="10.5" transform="rotate(-40 20 20)" fill="#E0884A" stroke="'+O+'" stroke-width="2"/><ellipse cx="16" cy="16" rx="4" ry="2.4" transform="rotate(-40 16 16)" fill="#FFFFFF" fill-opacity=".45"/>',
+ side:'<path d="M17 8q-3 3 0 6M24 6q-3 3 0 6M31 8q-3 3 0 6" fill="none" stroke="#A79FBD" stroke-width="2" stroke-linecap="round"/><path d="M6 22h36a18 16 0 0 1-36 0z" fill="#FFC83D" stroke="'+O+'" stroke-width="2" stroke-linejoin="round"/><ellipse cx="24" cy="22" rx="18" ry="5" fill="#F07A3E" stroke="'+O+'" stroke-width="2"/><ellipse cx="18" cy="21" rx="3" ry="1.6" fill="#4FB286"/><ellipse cx="28" cy="22.5" rx="2.6" ry="1.4" fill="#FFFFFF" fill-opacity=".8"/>',
+ one:'<path d="M30 6l-6 18M35 7l-8 17" stroke="#B0521A" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="24" cy="32" rx="19" ry="8" fill="#FFFFFF" stroke="'+O+'" stroke-width="2"/><path d="M11 30q3-9 7-2t7-1 7 0 6 2" fill="none" stroke="#F2B53B" stroke-width="3.2" stroke-linecap="round"/><circle cx="17" cy="27" r="2.6" fill="#FF6B6B" stroke="'+O+'" stroke-width="1.5"/><ellipse cx="30" cy="26.5" rx="3" ry="1.6" fill="#4FB286"/>',
+ veg:'<path d="M21 27h6l2 15h-10z" fill="#9BCB5A" stroke="'+O+'" stroke-width="2" stroke-linejoin="round"/><circle cx="16" cy="22" r="7" fill="#3FA864" stroke="'+O+'" stroke-width="2"/><circle cx="32" cy="22" r="7" fill="#3FA864" stroke="'+O+'" stroke-width="2"/><circle cx="24" cy="15" r="8.5" fill="#4FB286" stroke="'+O+'" stroke-width="2"/><circle cx="21" cy="13" r="2" fill="#FFFFFF" fill-opacity=".45"/>',
+ fruit:'<path d="M5 16a19 19 0 0 0 38 0z" fill="#4FB286" stroke="'+O+'" stroke-width="2" stroke-linejoin="round"/><path d="M9 16a15 15 0 0 0 30 0z" fill="#FF6B7F"/><ellipse cx="18" cy="21" rx="1.2" ry="2" fill="'+O+'"/><ellipse cx="24" cy="25" rx="1.2" ry="2" fill="'+O+'"/><ellipse cx="30" cy="21" rx="1.2" ry="2" fill="'+O+'"/><path d="M5 16h38" stroke="'+O+'" stroke-width="2" stroke-linecap="round"/>',
+ drink:'<path d="M27 2l-3 14" stroke="#FF8FB1" stroke-width="3.5" stroke-linecap="round"/><path d="M13 14h22l-3 28h-16z" fill="#FFE6EE" stroke="'+O+'" stroke-width="2" stroke-linejoin="round"/><path d="M14.4 24h19.2l-1.6 18h-16z" fill="#C98B5E"/><circle cx="19" cy="37" r="2.2" fill="'+O+'"/><circle cx="24" cy="38.5" r="2.2" fill="'+O+'"/><circle cx="29" cy="37" r="2.2" fill="'+O+'"/><path d="M11 14h26" stroke="'+O+'" stroke-width="2.4" stroke-linecap="round"/>',
+ snack:'<path d="M13 26h22l-3 15h-16z" fill="#6CC3FF" stroke="'+O+'" stroke-width="2" stroke-linejoin="round"/><path d="M19 27l1 13M24 27v13M29 27l-1 13" stroke="#FFFFFF" stroke-opacity=".6" stroke-width="1.5"/><path d="M11 26c-2-6 4-9 7-7 1-6 11-6 12 0 3-2 9 1 7 7z" fill="#FF8FB1" stroke="'+O+'" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="12" r="3.2" fill="#E5484D" stroke="'+O+'" stroke-width="1.6"/>',
+ fat:'<rect x="19" y="4" width="10" height="7" rx="2" fill="'+O+'"/><path d="M17 11h14v4l4 5v20a3 3 0 0 1-3 3H16a3 3 0 0 1-3-3V20l4-5z" fill="#FF6B6B" stroke="'+O+'" stroke-width="2" stroke-linejoin="round"/><rect x="16" y="24" width="16" height="10" rx="2" fill="#FFFFFF"/><path d="M20 29h8" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round"/>',
+ combo:'<rect x="5" y="12" width="38" height="28" rx="6" fill="#FFC83D" stroke="'+O+'" stroke-width="2"/><rect x="9" y="16" width="16" height="20" rx="3" fill="#FFFFFF" stroke="'+O+'" stroke-width="1.6"/><rect x="28" y="16" width="11" height="9" rx="3" fill="#4FB286" stroke="'+O+'" stroke-width="1.6"/><rect x="28" y="27" width="11" height="9" rx="3" fill="#F07A3E" stroke="'+O+'" stroke-width="1.6"/><circle cx="17" cy="26" r="3.6" fill="#FFD84D" stroke="'+O+'" stroke-width="1.4"/>',
+ scale:'<rect x="6" y="10" width="36" height="30" rx="9" fill="#B79DF2" stroke="'+O+'" stroke-width="2"/><rect x="14" y="16" width="20" height="9" rx="3" fill="#FFFFFF" stroke="'+O+'" stroke-width="1.6"/><path d="M24 21l3-3" stroke="#E5484D" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="33" r="2" fill="#FFFFFF"/><circle cx="32" cy="33" r="2" fill="#FFFFFF"/>',
+ sneaker:'<path d="M5 32c0-6 3-10 5-14l8 2c1 3 4 5 8 6l13 4c3 1 4 3 4 6v2H5z" fill="#F07A3E" stroke="'+O+'" stroke-width="2" stroke-linejoin="round"/><path d="M5 38h38" stroke="'+O+'" stroke-width="2"/><path d="M5 34h38v4H5z" fill="#FFFFFF"/><path d="M14 22l3 1M16 25l3 1" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>'
+};
+var CATKEY={"ข้าว แป้ง เส้น":"rice","เนื้อสัตว์ ไข่ เต้าหู้":"meat","กับข้าว":"side","อาหารจานเดียว":"one","ผัก":"veg","ผลไม้":"fruit","นม เครื่องดื่ม":"drink","ขนม ของว่าง":"snack","น้ำมัน เครื่องปรุง":"fat",rice:"rice",meat:"meat",side:"side",one:"one",veg:"veg",fruit:"fruit",drink:"drink",snack:"snack",fat:"fat"};
+var TINT={rice:"--mint",meat:"--peach",side:"--sun",one:"--sky",veg:"--mint",fruit:"--pink",drink:"--lilac",snack:"--sky",fat:"--peach",combo:"--sun",scale:"--lilac",sneaker:"--peach"};
+function ill(key,size,cls){key=CATKEY[key]||key;var s=size||40;
+  return '<span class="ill '+(cls||"")+'" style="width:'+s+'px;height:'+s+'px;background:color-mix(in srgb,var('+(TINT[key]||"--sun")+') 30%,var(--surface))"><svg viewBox="0 0 48 48" width="'+Math.round(s*0.78)+'" height="'+Math.round(s*0.78)+'" aria-hidden="true">'+(ILL[key]||ILL.rice)+'</svg></span>';}
+function sparkles(){return '<svg class="deco" viewBox="0 0 120 60" aria-hidden="true"><path d="M20 10l3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="var(--sun)"/><path d="M96 30l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--pink)"/><circle cx="66" cy="12" r="3" fill="var(--sky)"/><circle cx="108" cy="8" r="2" fill="var(--mint)"/></svg>';}
 
 // ---------- server sync (Apps Script) ----------
 var SKEY="kinpodi:session",SESSION=null,dirty={},profDirty=false,flushT=null,flushing=false,FOODDATA=null;
@@ -348,7 +403,8 @@ function initGoogle(){
 function vLogin(){
   var h='<div style="display:flex;flex-direction:column;gap:18px;padding-top:4vh">'+
     '<div class="brand" style="font-size:2rem"><span class="brand-mark">'+svg(ICON.food,24)+'</span>กินพอดี</div>'+
-    '<div class="card hero-card"><div class="mascot-row">'+mascot("happy")+'<div class="bubble">สวัสดี! เข้าสู่ระบบก่อนนะ แล้วมานับแคลด้วยกัน~</div></div></div>';
+    '<div class="card hero-card"><div class="mascot-row">'+mascot("happy")+'<div class="bubble">สวัสดี! เข้าสู่ระบบก่อนนะ แล้วมานับแคล<span class="nw">ด้วยกัน~</span></div></div></div>'+
+    '<div class="parade" aria-hidden="true">'+ill("rice",52,"round")+ill("drink",52,"round")+ill("veg",52,"round")+ill("fruit",52,"round")+ill("snack",52,"round")+'</div>';
   if(!configured())return h+'<div class="callout"><b style="font-family:var(--font-display)">ยังไม่ได้เชื่อมกับ Apps Script</b><span class="small">เปิดไฟล์ index.html แล้วใส่ลิงก์ Web app ใน CONFIG.SCRIPT_URL บรรทัดบนสุดของสคริปต์</span></div></div>';
   h+='<form class="card" id="loginForm" novalidate><h2>เข้าสู่ระบบ</h2>'+
     '<label class="field">ชื่อผู้ใช้<input id="l_user" autocomplete="username" autocapitalize="none" spellcheck="false" value="'+esc(S.loginUser||"")+'"></label>'+
@@ -439,7 +495,7 @@ function header(withDate){
 }
 function bar(label,val,max,color){
   var pct=Math.min(100,max?val/max*100:0);
-  return '<div><div class="bar-top"><span>'+label+'</span><span class="muted num">'+fmt(val)+' / '+fmt(max)+' g</span></div><div class="bar"><span style="width:'+pct+'%;background:'+color+'"></span></div></div>';
+  return '<div style="--dot:'+color+'"><div class="bar-top"><span>'+label+'</span><span class="muted num">'+fmt(val)+' / '+fmt(max)+' g</span></div><div class="bar"><span style="width:'+pct+'%;background:'+color+'"></span></div></div>';
 }
 function itemSub(it){var f=BYID[it.food];var g=unitGrams(f,it.unit)*it.qty;return fmt(it.qty,1)+" "+esc(it.unit)+(it.unit==="กรัม"?"":" · "+fmt(g)+" g");}
 var TIPS=["ข้าวสวย 1 ทัพพี ประมาณ 80 kcal นะ","ผัดน้ำมัน 1 ช้อนชา ได้มาอีก 45 kcal เลย","น้ำปลา 1 ช้อนชา มีโซเดียมราว 460 mg","เติมผักให้ได้ครึ่งจาน อิ่มนานขึ้นเยอะ","ชาเย็น 1 แก้ว ≈ ข้าว 3 ทัพพีเลยนะ","โปรตีนช่วยให้อิ่มนาน ลองเพิ่มไข่สักฟอง","เดินเร็ว 30 นาที เผาได้ราว 150 kcal"];
@@ -484,7 +540,7 @@ function vToday(){
   var st=streak();
   var h=header(true);
   if(S.profile.example)h+='<div class="callout"><b style="font-family:var(--font-display)">มาตั้งค่าโปรไฟล์กันก่อน!</b><span class="small">ตอนนี้ใช้ค่าตัวอย่าง (ชาย 35 ปี 170 ซม. 69 กก.) กรอกของจริงแล้วเป้าหมายจะแม่นขึ้นเยอะ</span><button class="btn btn-primary" data-act="tab" data-v="set">ตั้งค่าเลย</button></div>';
-  h+='<section class="card hero-card" aria-label="สรุปพลังงาน"><div class="mascot-row">'+mascot(mood)+'<div class="bubble">'+msg+'</div></div>'+
+  h+='<section class="card hero-card" aria-label="สรุปพลังงาน">'+sparkles()+'<div class="mascot-row">'+mascot(mood)+'<div class="bubble">'+msg+'</div></div>'+
     '<div class="hero"><div class="ring"><svg viewBox="0 0 120 120"><circle class="ring-track" cx="60" cy="60" r="52"/><circle class="ring-val'+(over?" over":"")+'" cx="60" cy="60" r="52" stroke-dasharray="'+dash.toFixed(1)+' '+C.toFixed(1)+'"/></svg>'+
     '<div class="ring-center"><span class="big num">'+fmt(Math.abs(left))+'</span><span class="small muted">'+(over?"kcal เกินเป้า":"kcal เหลือ")+'</span></div></div>'+
     '<div class="stats"><div class="stat"><span class="muted small">กินไป</span><b>'+fmt(s.kcal)+'</b></div>'+
@@ -495,26 +551,25 @@ function vToday(){
   h+=watchCard(S.date,T);
   h+='<section class="card bars" aria-label="สารอาหาร">'+bar("โปรตีน",s.p,T.p,"var(--mp)")+bar("คาร์โบไฮเดรต",s.c,T.c,"var(--mc)")+bar("ไขมัน",s.f,T.f,"var(--mf)")+
     '<div class="sodium '+naCls+'"><div class="bar-top"><span>โซเดียม'+(naCls==="bad"?" · เค็มเกินแล้ว!":naCls==="warn"?" · เริ่มเค็มแล้วนะ":"")+'</span><span class="num">'+fmt(s.na)+' / '+fmt(T.na)+' mg</span></div><div class="bar"><span style="width:'+Math.min(100,s.na/T.na*100)+'%;background:'+(naCls?"currentColor":"var(--water)")+'"></span></div></div></section>';
-  h+='<section class="card" aria-label="มื้ออาหาร">';
+  var MTINT={b:"--sun",l:"--sky",d:"--lilac",s:"--pink"},MEMPTY={b:"rice",l:"one",d:"side",s:"snack"};
   MEALS.forEach(function(m){
     var its=d.items.filter(function(it){return it.meal===m[0];}),k=0;its.forEach(function(it){k+=itemNut(it).kcal;});
     var ic=MEALIC[m[0]];
-    h+='<div class="meal"><div class="meal-head"><h3><span class="meal-ic" style="background:color-mix(in srgb,'+ic[0]+' 35%,var(--surface))">'+svg(ic[1],18)+'</span>'+MEALNAME[m[0]]+(its.length?' <span class="muted small num">'+fmt(k)+' kcal</span>':'')+'</h3><button class="addlink" data-act="addmeal" data-v="'+m[0]+'">+ เพิ่ม</button></div>';
-    if(!its.length)h+='<div class="empty">ว่างอยู่ แตะ + เพิ่ม ได้เลย</div>';
+    h+='<section class="meal-card" style="--tint:var('+MTINT[m[0]]+')" aria-label="'+MEALNAME[m[0]]+'"><div class="meal-head"><h3><span class="meal-ic">'+svg(ic[1],18)+'</span>'+MEALNAME[m[0]]+(its.length?' <span class="muted small num">'+fmt(k)+' kcal</span>':'')+'</h3><button class="addlink" data-act="addmeal" data-v="'+m[0]+'">+ เพิ่ม</button></div>';
+    if(!its.length)h+='<div class="empty-ill">'+ill(MEMPTY[m[0]],36,"round")+'<span>ยังว่างอยู่ แตะ + เพิ่ม ได้เลย</span></div>';
     its.forEach(function(it){var f=BYID[it.food];if(!f)return;
-      h+='<button class="item" data-act="edit" data-v="'+it.id+'"><span><span class="name">'+esc(f.name)+'</span><br><span class="sub">'+itemSub(it)+'</span></span><span class="kcal">'+fmt(itemNut(it).kcal)+'</span></button>';});
-    h+='</div>';
+      h+='<button class="item has-ill" data-act="edit" data-v="'+it.id+'">'+ill(f.cat,38)+'<span style="min-width:0"><span class="name">'+esc(f.name)+'</span><br><span class="sub">'+itemSub(it)+'</span></span><span class="kcal">'+fmt(itemNut(it).kcal)+'</span></button>';});
+    h+='</section>';
   });
-  h+='</section>';
-  h+='<section class="card" aria-label="ออกกำลังกาย"><div class="card-head"><h2>ขยับตัววันนี้</h2><button class="addlink" style="color:var(--ex);background:color-mix(in srgb,var(--ex) 14%,var(--surface))" data-act="tab" data-v="ex">+ เพิ่ม</button></div>';
+  h+='<section class="card tint" style="--tint:var(--peach)" aria-label="ออกกำลังกาย"><div class="card-head"><h2>ขยับตัววันนี้</h2><button class="addlink" style="color:var(--ex);background:color-mix(in srgb,var(--ex) 14%,var(--surface))" data-act="tab" data-v="ex">+ เพิ่ม</button></div>';
   if(bn.src==="watch")h+='<span class="small muted">วันนี้ใช้พลังงานจากนาฬิกาแล้ว รายการที่กรอกเองแสดงไว้ดูเท่านั้น จะไม่นับซ้ำ</span>';
-  if(!d.ex.length)h+='<div class="empty">'+(bn.src==="watch"?"ไม่ต้องกรอกเพิ่มก็ได้ นาฬิกานับให้แล้ว":"ยังไม่ได้ขยับเลย เดินเล่นสัก 15 นาทีก็ดีนะ")+'</div>';
+  if(!d.ex.length)h+='<div class="empty-ill">'+ill("sneaker",36,"round")+'<span>'+(bn.src==="watch"?"ไม่ต้องกรอกเพิ่มก็ได้ นาฬิกานับให้แล้ว":"ยังไม่ได้ขยับเลย เดินเล่นสัก 15 นาทีก็ดีนะ")+'</span></div>';
   d.ex.forEach(function(e){var a=ACTS.filter(function(x){return x.id===e.act;})[0]||ACTS[0];
     h+='<div class="exrow"><span class="exdot">'+svg(a.ic,22)+'</span><span style="flex:1;min-width:0"><b>'+esc(a.name)+'</b> '+e.min+' นาที<br><span class="small muted">'+LVL[e.lvl]+' · '+fmt(e.kcal)+' kcal</span></span><button class="iconbtn" data-act="delex" data-v="'+e.id+'" aria-label="ลบ '+esc(a.name)+'">×</button></div>';});
   h+='</section>';
   h+=vWater(d);
   var w=latest("weight",S.date);
-  h+='<div class="mini" style="flex-direction:row;align-items:center;justify-content:space-between"><span><span class="small muted">น้ำหนักล่าสุด</span><br><span class="val">'+(w?fmt(w.v,1):"–")+' <span class="small muted">กก.</span></span></span><button class="btn btn-ghost" data-act="tab" data-v="prog">ชั่งวันนี้</button></div>';
+  h+='<div class="mini tint" style="--tint:var(--lilac);flex-direction:row;align-items:center;gap:12px">'+ill("scale",44,"round")+'<span style="flex:1"><span class="small muted">น้ำหนักล่าสุด</span><br><span class="val">'+(w?fmt(w.v,1):"–")+' <span class="small muted">กก.</span></span></span><button class="btn btn-ghost" data-act="tab" data-v="prog">ชั่งวันนี้</button></div>';
   return h;
 }
 var CONTS=[["แก้ว",250],["ขวดเล็ก",600],["กระบอก",750],["ขวด 1 ลิตร",1000],["ขวด 1.5 ลิตร",1500]];
@@ -534,7 +589,7 @@ function bottle(pct){
 }
 function vWater(d){
   var st=S.settings,goal=st.waterGoal,ml=waterMl(d),pct=goal?ml/goal:0,add=Math.round(st.wCont*st.wFrac);
-  var h='<section class="card" aria-label="น้ำดื่ม"><div class="card-head"><h2>น้ำดื่ม</h2><span class="small muted">เป้า '+fmtMl(goal)+'</span></div>'+
+  var h='<section class="card tint" style="--tint:var(--sky)" aria-label="น้ำดื่ม"><div class="card-head"><h2>น้ำดื่ม</h2><span class="small muted">เป้า '+fmtMl(goal)+'</span></div>'+
    '<div style="display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center">'+bottle(pct)+
    '<div style="display:flex;flex-direction:column;gap:4px;min-width:0"><span class="num" style="font-size:1.9rem;font-weight:700;color:var(--water);line-height:1.1">'+fmtMl(ml)+'</span>'+
    '<span class="small muted">'+(ml>=goal?"ครบเป้าแล้ว ชื่นใจ!":"อีก "+fmtMl(goal-ml)+" ก็ครบ")+'</span>'+
@@ -570,11 +625,11 @@ function vFood(){
   var freq=freqFoods();
   if(S.filter==="freq"&&!freq.length)S.filter="combo";
   var chips=[["freq","ใช้บ่อย"],["combo","ชุดสำเร็จ"]].concat(Object.keys(CATS).map(function(c){return [c,CATS[c]];}));
-  if(!S.query)h+='<div class="chips" role="group" aria-label="หมวด">'+chips.map(function(c){return '<button class="chip" data-act="filter" data-v="'+c[0]+'" aria-pressed="'+(S.filter===c[0])+'">'+c[1]+'</button>';}).join("")+'</div>';
+  if(!S.query)h+='<div class="chips" role="group" aria-label="หมวด">'+chips.map(function(c){return '<button class="chip" data-act="filter" data-v="'+c[0]+'" aria-pressed="'+(S.filter===c[0])+'">'+(c[0]==="freq"?"":ill(c[0]==="combo"?"combo":c[0],28,"round"))+c[1]+'</button>';}).join("")+'</div>';
   h+='<section class="card" style="padding-block:6px"><div class="list">';
   if(!S.query&&S.filter==="combo"){
     h+=COMBOS.map(function(c){var k=0,parts=c.items.map(function(x){var f=BYID[x.food];k+=nut(f,unitGrams(f,x.unit)*x.qty).kcal;return f.name.split(" (")[0]+" "+x.qty+" "+x.unit;});
-      return '<button class="item" data-act="combo" data-v="'+c.id+'"><span><span class="name">'+esc(c.name)+'</span><br><span class="sub">'+esc(parts.join(" + "))+'</span></span><span class="kcal">'+fmt(k)+'</span></button>';}).join("");
+      return '<button class="item has-ill" data-act="combo" data-v="'+c.id+'">'+ill("combo",40)+'<span style="min-width:0"><span class="name">'+esc(c.name)+'</span><br><span class="sub">'+esc(parts.join(" + "))+'</span></span><span class="kcal">'+fmt(k)+'</span></button>';}).join("");
   }else{
     var list;
     if(S.query){var q=S.query.trim().toLowerCase();list=FOODS.filter(function(f){return (f.name+" "+f.alias).toLowerCase().indexOf(q)>=0;});}
@@ -582,14 +637,14 @@ function vFood(){
     else list=FOODS.filter(function(f){return f.cat===S.filter;});
     if(!list.length)h+='<div class="empty" style="padding:14px 0">ไม่พบเมนูนี้ ลองคำอื่น เช่น ชื่อวัตถุดิบหลัก</div>';
     h+=list.slice(0,80).map(function(f){var u=f.units[0];
-      return '<button class="item" data-act="pick" data-v="'+f.id+'"><span><span class="name">'+esc(f.name)+'</span>'+(S.query?'<span class="tag">'+esc(CATS[f.cat])+'</span>':'')+'<br><span class="sub">1 '+esc(u[0])+' · '+fmt(u[1])+' g</span></span><span class="kcal">'+fmt(f.kcal*u[1]/100)+'</span></button>';}).join("");
+      return '<button class="item has-ill" data-act="pick" data-v="'+f.id+'">'+ill(f.cat,40)+'<span style="min-width:0"><span class="name">'+esc(f.name)+'</span>'+(S.query?'<span class="tag">'+esc(CATS[f.cat])+'</span>':'')+'<br><span class="sub">1 '+esc(u[0])+' · '+fmt(u[1])+' g</span></span><span class="kcal">'+fmt(f.kcal*u[1]/100)+'</span></button>';}).join("");
   }
   h+='</div></section><p class="small muted">ค่าโภชนาการเป็นค่าประมาณ อ้างอิงแนวทางของ Thai FCD (สถาบันโภชนาการ ม.มหิดล) และรอการตรวจทานทีละรายการ</p>';
   return h;
 }
 function vEx(){
   var w=currentWeight(),e=S.ex,k=exKcal(e.act,e.min,e.lvl,w),d=day(S.date);
-  var h=header(true)+'<section class="card"><h2>กิจกรรม</h2><div class="acts">'+ACTS.map(function(a){return '<button class="act" data-act="exact" data-v="'+a.id+'" aria-pressed="'+(e.act===a.id)+'">'+svg(a.ic,24)+'<span>'+a.name+'</span></button>';}).join("")+'</div></section>';
+  var h=header(true)+'<section class="card"><h2>กิจกรรม</h2><div class="acts">'+ACTS.map(function(a){return '<button class="act" style="--tint:var('+({walk:"--mint",run:"--peach",bike:"--sky",swim:"--sky",weight:"--lilac",yoga:"--pink",aero:"--sun",badm:"--mint",house:"--sun"}[a.id]||"--sun")+')" data-act="exact" data-v="'+a.id+'" aria-pressed="'+(e.act===a.id)+'">'+svg(a.ic,24)+'<span>'+a.name+'</span></button>';}).join("")+'</div></section>';
   h+='<section class="card"><h2>ระยะเวลา</h2><div class="stepper"><button data-act="exmin" data-v="-5" aria-label="ลด 5 นาที">−</button><label style="text-align:center"><span hidden>นาที</span><input id="exmin" type="number" inputmode="numeric" min="1" max="600" value="'+e.min+'"></label><button data-act="exmin" data-v="5" aria-label="เพิ่ม 5 นาที">+</button></div>'+
     '<div class="grid3" style="grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">'+[15,30,45,60].map(function(m){return '<button class="chip" style="width:100%" data-act="exset" data-v="'+m+'" aria-pressed="'+(e.min===m)+'">'+m+' นาที</button>';}).join("")+'</div></section>';
   h+='<section class="card"><h2>ความหนัก</h2><div class="seg" role="group" aria-label="ความหนัก">'+LVL.map(function(l,i){return '<button data-act="exlvl" data-v="'+i+'" aria-pressed="'+(e.lvl===i)+'">'+l+'</button>';}).join("")+'</div><span class="small muted">'+LVLHINT[e.lvl]+'</span></section>';
@@ -712,7 +767,7 @@ function renderSheet(){
   var sh=S.sheet,f=BYID[sh.food],g=unitGrams(f,sh.unit)*sh.qty,n=nut(f,g);
   var units=f.units.concat([["กรัม",1]]);
   root.innerHTML='<div class="backdrop" data-act="close"></div><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shT"><div class="grab"></div>'+
-    '<div class="card-head"><h2 id="shT" style="font-size:1.25rem">'+esc(f.name)+'</h2><span class="small muted">'+esc(CATS[f.cat])+'</span></div>'+
+    '<div style="display:flex;align-items:center;gap:14px">'+ill(f.cat,60)+'<div style="min-width:0"><h2 id="shT" style="font-size:1.25rem">'+esc(f.name)+'</h2><span class="small muted">'+esc(CATS[f.cat])+'</span></div></div>'+
     '<div class="seg" role="group" aria-label="มื้อ">'+MEALS.map(function(m){return '<button data-act="shmeal" data-v="'+m[0]+'" aria-pressed="'+(sh.meal===m[0])+'">'+m[1]+'</button>';}).join("")+'</div>'+
     '<div class="field">หน่วย<div class="chips" style="margin:0;padding:0">'+units.map(function(u){return '<button class="chip" data-act="unit" data-v="'+esc(u[0])+'" aria-pressed="'+(sh.unit===u[0])+'">'+esc(u[0])+(u[0]==="กรัม"?"":' <span class="muted small">'+fmt(u[1],1)+' g</span>')+'</button>';}).join("")+'</div></div>'+
     '<div class="stepper"><button data-act="qty" data-v="-1" aria-label="ลดจำนวน">−</button><label><span hidden>จำนวน</span><input id="qty" type="number" inputmode="decimal" step="'+(sh.unit==="กรัม"?10:0.5)+'" min="0" value="'+sh.qty+'"></label><button data-act="qty" data-v="1" aria-label="เพิ่มจำนวน">+</button></div>'+
